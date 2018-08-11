@@ -26,4 +26,16 @@ router.post('/register', function(req, res, next){
     res.send('sign up successfully.');
 });
 
+router.post('/register/teacher', function(req, res){
+
+});
+
+router.post('/register/student', function(req, res){
+
+});
+
+router.post('/register/parent', function(req, res){
+
+});
+
 module.exports = router;

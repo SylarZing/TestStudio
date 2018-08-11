@@ -1,10 +1,12 @@
 class User {
-    constructor(){
-        this.strUserName = '';
-        this.strPhone = null;
-        this.strEmail = null;
-        this.strPassword = '';
-        this.iUserType = 5;
+    constructor (id, username, phone, email, password, usertype){
+        this.ID = id;
+        this.UserName = username;
+        this.Phone = phone;
+        this.Email = email;
+        this.Password = password;
+        this.UserType = usertype;
+
     }
 }
 
