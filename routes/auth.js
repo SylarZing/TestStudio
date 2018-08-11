@@ -3,6 +3,9 @@
 var express = require('express');
 var router = express.Router();
 
+var response = require('./common/response');
+var helper = require('./common/helper');
+
 var User = require('../model/User');
 var Teacher = require('../model/Teacher');
 
@@ -32,10 +35,12 @@ router.post('/register/teacher', function(req, res){
                               req.body.password, req.body.usertype, req.body.teacherid, req.body.name);
 
     console.log(JSON.stringify(teacher));
-    if (teacher.ID === undefined || teacher.ID === null){
-        console.log('hahahahahah');
-    }
-    res.send('sign up teacher.');
+    if (helper.isValueNullOrUndefine(teacher.ID))
+        res.send(JSON.stringify(response.FAILED));
+    response.SUCCESS.setMsg('Sign up teacher successfully.');
+    response.SUCCESS.setData(teacher);
+    res.send(JSON.stringify(response.SUCCESS));
+    //res.send('sign up teacher.');
 });
 
 router.post('/register/student', function(req, res){

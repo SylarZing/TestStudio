@@ -1,3 +1,5 @@
+'use strict';
+
 class User {
     constructor (id, username, phone, email, password, usertype){
         this.ID = id;

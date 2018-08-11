@@ -1,3 +1,5 @@
+'use strict';
+
 var User = require('./User');
 
 class Parent extends User {
