@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../model/User');
+var Teacher = require('../model/Teacher');
 
 
 router.post('/login',function(req, res, next){
@@ -27,7 +28,14 @@ router.post('/register', function(req, res, next){
 });
 
 router.post('/register/teacher', function(req, res){
+    var teacher = new Teacher(req.body.id, req.body.username, req.body.Phone, req.body.Email,
+                              req.body.password, req.body.usertype, req.body.teacherid, req.body.name);
 
+    console.log(JSON.stringify(teacher));
+    if (teacher.ID === undefined || teacher.ID === null){
+        console.log('hahahahahah');
+    }
+    res.send('sign up teacher.');
 });
 
 router.post('/register/student', function(req, res){
