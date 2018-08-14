@@ -4,16 +4,16 @@ const DB_Config = require('./db_config');
 const mysql = require('mysql');
 const pool = mysql.createPool(DB_Config.mysql);
 
-function excSql(strSql, param){
+exports.excSql = (strSql, param) => {
     console.log(strSql);
     return new Promise (function(resolve, reject){
         pool.getConnection(function(err, connection){
             if (err){
-                resolve(err);
+                reject(err);
                 return;
             }  
-            
-            connection.query(sql, param, function(error, result){
+
+            connection.query(strSql, param, function(error, result){
                 if(error){
                     reject(error);
                 } else{
@@ -25,7 +25,7 @@ function excSql(strSql, param){
     });
 }
 
-function excTransaction(arrSqls){
+exports.excTransaction = (arrSqls) => {
     console.log(arrSqls);
     return new Promise (function(resolve, reject){
         pool.getConnection (function(err, connection){
@@ -58,16 +58,8 @@ function excTransaction(arrSqls){
     });
 }
 
-// class db {
-//     static connect(){
-//         connection.connect();
-//     }
+function callback(err, result){
 
-//     static close(){
-//         connection.close();
-//     }
+}
 
-//     static query(){
-//         connect.query()
-//     }
-// }
+

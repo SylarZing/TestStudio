@@ -8,7 +8,6 @@ class User {
         this.Email = email;
         this.Password = password;
         this.UserType = usertype;
-
     }
 }
 

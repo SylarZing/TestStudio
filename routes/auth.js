@@ -18,7 +18,7 @@ router.post('/login',function(req, res, next){
     res.send('login successfully.');
 });
 
-router.post('/register', function(req, res, next){
+router.post('/register/user', function(req, res){
 
     var user = new User();
     user.strUserName = req.body.UserName;
@@ -35,12 +35,23 @@ router.post('/register/teacher', function(req, res){
                               req.body.password, req.body.usertype, req.body.teacherid, req.body.name);
 
     console.log(JSON.stringify(teacher));
-    if (helper.isValueNullOrUndefine(teacher.ID))
-        //res.send(JSON.stringify(response.FAILED));
-    response.SUCCESS.setMsg('Sign up teacher successfully.');
-    response.SUCCESS.setData(teacher);
+    teacher.addTeacher().then(function(result){
+        console.log('+++++/////////////////');
+        console.log(JSON.stringify(result));
+        console.log('/++++////////////////');
+
+        response.SUCCESS.setMsg('Sign up teacher successfully.');
+        response.SUCCESS.setData(teacher);
+    }).catch(function(error){
+
+    });
+
+
+    
+    
+    
     res.send(JSON.stringify(response.SUCCESS));
-    //res.send('sign up teacher.');
+    
 });
 
 router.post('/register/student', function(req, res){
