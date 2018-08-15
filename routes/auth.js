@@ -20,46 +20,59 @@ router.post('/login',function(req, res, next){
 
 router.post('/register/user', function(req, res){
 
-    var user = new User();
-    user.strUserName = req.body.UserName;
-    user.strPhone = req.body.Phone;
-    user.strEmail = req.body.Email;
-    user.strPassword = req.body.Password;
-    user.iUserType = req.body.UserType;
-    
-    res.send('sign up successfully.');
-});
+    var user = new User('',
+                        req.body.username,
+                        req.body.phone,
+                        req.body.email,
+                        req.body.password,
+                        5,
+                        true);
 
-router.post('/register/teacher', function(req, res){
-    var teacher = new Teacher(req.body.id, req.body.username, req.body.Phone, req.body.Email,
-                              req.body.password, req.body.usertype, req.body.teacherid, req.body.name);
+    if (User.IsUserNameInvalid(user.UserName)){
+        var resp = response.FAILED;
+        resp.msg = 'User Name Required.';
+        res.send(JSON.stringify(resp));
+    }
 
-    console.log(JSON.stringify(teacher));
-    teacher.addTeacher().then(function(result){
-        console.log('+++++/////////////////');
-        console.log(JSON.stringify(result));
-        console.log('/++++////////////////');
+    User.IsUserExisted(user.UserName).then(function(ValidationResult){
+        if(!ValidationResult){
+            User.AddUser(user.UserName, user.Phone, user.Email, user.Password, user.UserType, user.IsActive).then(function(InsertResult){
+                
+                if (!helper.isValueNullOrUndefine(InsertResult)){
+                    User.GetUserByName(user.UserName).then(function(result){
 
-        response.SUCCESS.setMsg('Sign up teacher successfully.');
-        response.SUCCESS.setData(teacher);
-    }).catch(function(error){
+                        if (helper.isValueNullOrUndefine(result)){
+                            var resp = response.FAILED;
+                            resp.msg = 'Sign up failed.';
+                            res.send(JSON.stringify(resp));
+                        } else{
+                            var resp = response.SUCCESS;
+                            resp.msg = 'Sign up successfully.';
+                            resp.data = result;
+                            res.send(JSON.stringify(resp));
+                        }
 
-    });
+                    }).catch(function(error){
 
+                        var resp = response.EXCEPTION;
+                        resp.data = error;
+                        res.send(JSON.stringify(resp));
 
-    
-    
-    
-    res.send(JSON.stringify(response.SUCCESS));
-    
-});
+                    });
+                }
+            }).catch(function(error){
 
-router.post('/register/student', function(req, res){
+                var resp = response.EXCEPTION;
+                resp.data = error;
+                res.send(JSON.stringify(resp));
 
-});
-
-router.post('/register/parent', function(req, res){
-
+            });
+        } else {
+            var resp = response.FAILED;
+            resp.msg = 'User Name Duplicated.';
+            res.send(JSON.stringify(resp));
+        }
+    })
 });
 
 module.exports = router;

@@ -38,5 +38,5 @@ module.exports = {
     SUCCESS         :           new Response(200, 'Connection Successful.', {}),
     FAILED          :           new Response(500, 'Business Failed.', {}),
 
-    EXCEPTION       :           new Response(501, 'Logic Exceptions.', {})
+    EXCEPTION       :           new Response(501, 'Internal Exceptions.', {})
 }

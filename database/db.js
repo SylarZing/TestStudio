@@ -5,14 +5,12 @@ const mysql = require('mysql');
 const pool = mysql.createPool(DB_Config.mysql);
 
 exports.excSql = (strSql, param) => {
-    console.log(strSql);
+    
     return new Promise (function(resolve, reject){
         pool.getConnection(function(err, connection){
             if (err){
                 reject(err);
-                return;
             }  
-
             connection.query(strSql, param, function(error, result){
                 if(error){
                     reject(error);
@@ -23,6 +21,7 @@ exports.excSql = (strSql, param) => {
             });
         });
     });
+    
 }
 
 exports.excTransaction = (arrSqls) => {
@@ -58,8 +57,5 @@ exports.excTransaction = (arrSqls) => {
     });
 }
 
-function callback(err, result){
-
-}
 
 
