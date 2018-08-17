@@ -18,7 +18,7 @@ router.post('/login',function(req, res, next){
     res.send('login successfully.');
 });
 
-router.post('/register/user', function(req, res){
+router.post('/register', function(req, res){
 
     var user = new User('',
                         req.body.username,
