@@ -14,7 +14,7 @@ class User {
         this.IsActive = isactive;
     }
 
-    static IsUserNameInvalid(username){
+    static IsUserNameInvalid(username) {
         return Helper.isValueNullOrUndefineOrStringEmpty(username);
     }
 
@@ -35,28 +35,26 @@ class User {
         });
     }
 
-    static GetUserByName(username){
-        
+    static GetUserByName(username) {
+
         var sqlSelect = 'SELECT * FROM T_USER WHERE UserName = ?';
         var param = [username];
 
         return new Promise(function (resolve, reject) {
-            console.log(sqlSelect);
-            console.log(param);
             db.excSql(sqlSelect, param)
                 .then(function (result) {
                     let data = Helper.convertDataFromResult(result);
                     var arrResult = Helper.convertToArray(data);
 
-                    if(arrResult.length > 0){
+                    if (arrResult.length > 0) {
                         resolve(arrResult[0]);
-                    }else{
+                    } else {
                         resolve(null);
                     }
                 }).catch(function (error) {
                     reject(error);
                 });
-                
+
         });
     }
 

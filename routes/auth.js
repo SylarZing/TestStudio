@@ -7,10 +7,8 @@ var response = require('./response');
 var helper = require('../common/helper');
 
 var User = require('../model/User');
-var Teacher = require('../model/Teacher');
 
-
-router.post('/login',function(req, res, next){
+router.post('/login', function (req, res, next) {
     console.log(req.body);
     console.log(req.body.username);
     console.log(req.body.password);
@@ -18,41 +16,41 @@ router.post('/login',function(req, res, next){
     res.send('login successfully.');
 });
 
-router.post('/register', function(req, res){
+router.post('/register', function (req, res) {
 
     var user = new User('',
-                        req.body.username,
-                        req.body.phone,
-                        req.body.email,
-                        req.body.password,
-                        5,
-                        true);
+        req.body.username,
+        req.body.phone,
+        req.body.email,
+        req.body.password,
+        5,
+        true);
 
-    if (User.IsUserNameInvalid(user.UserName)){
+    if (User.IsUserNameInvalid(user.UserName)) {
         var resp = response.FAILED;
         resp.msg = 'User Name Required.';
         res.send(JSON.stringify(resp));
     }
 
-    User.IsUserExisted(user.UserName).then(function(ValidationResult){
-        if(!ValidationResult){
-            User.AddUser(user.UserName, user.Phone, user.Email, user.Password, user.UserType, user.IsActive).then(function(InsertResult){
-                
-                if (!helper.isValueNullOrUndefine(InsertResult)){
-                    User.GetUserByName(user.UserName).then(function(result){
+    User.IsUserExisted(user.UserName).then(function (ValidationResult) {
+        if (!ValidationResult) {
+            User.AddUser(user.UserName, user.Phone, user.Email, user.Password, user.UserType, user.IsActive).then(function (InsertResult) {
 
-                        if (helper.isValueNullOrUndefine(result)){
+                if (!helper.isValueNullOrUndefine(InsertResult)) {
+                    User.GetUserByName(user.UserName).then(function (result) {
+
+                        if (helper.isValueNullOrUndefine(result)) {
                             var resp = response.FAILED;
                             resp.msg = 'Sign up failed.';
                             res.send(JSON.stringify(resp));
-                        } else{
+                        } else {
                             var resp = response.SUCCESS;
                             resp.msg = 'Sign up successfully.';
                             resp.data = result;
                             res.send(JSON.stringify(resp));
                         }
 
-                    }).catch(function(error){
+                    }).catch(function (error) {
 
                         var resp = response.EXCEPTION;
                         resp.data = error;
@@ -60,10 +58,10 @@ router.post('/register', function(req, res){
 
                     });
                 }
-            }).catch(function(error){
+            }).catch(function (InsertError) {
 
                 var resp = response.EXCEPTION;
-                resp.data = error;
+                resp.data = InsertError;
                 res.send(JSON.stringify(resp));
 
             });
