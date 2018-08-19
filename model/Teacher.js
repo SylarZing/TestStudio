@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('./User');
+
 var db = require('../database/db');
 
 var Helper = require('../common/helper');

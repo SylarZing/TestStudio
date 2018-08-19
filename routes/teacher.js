@@ -8,6 +8,7 @@ var response = require('./response');
 var Helper = require('../common/helper');
 
 var Teacher = require('../model/Teacher');
+var LevelMajor = require('../model/LevelMajor');
 
 router.post('/', function (req, res) {
 
@@ -104,7 +105,7 @@ router.put('/', function (req, res) {
 
                 if (!Helper.isValueNullOrUndefine(UpdateResult)) {
                     Teacher.GetTeacherById(teacher.ID).then(function (result) {
-                        
+
                         if (Helper.isValueNullOrUndefine(result)) {
                             var resp = response.FAILED;
                             resp.msg = 'Update teacher failed.';
@@ -140,36 +141,53 @@ router.put('/', function (req, res) {
 });
 
 router.get('', function (req, res) {
-    
+
     var params = url.parse(req.url, true).query;
     var userId = params.ID;
-    
+
     if (userId === 0 || userId === null || userId === undefined) {
         var resp = response.FAILED;
         resp.msg = 'UserID is required.';
         res.send(JSON.stringify(resp));
     }
-
+    
     Teacher.GetTeacherById(userId).then(function (result) {
-                        
+
         if (Helper.isValueNullOrUndefine(result)) {
             var resp = response.FAILED;
             resp.msg = 'Teacher is not existed.';
             res.send(JSON.stringify(resp));
         } else {
-            var resp = response.SUCCESS;
-            resp.msg = 'Get teacher successfully.';
-            resp.data = result;
-            res.send(JSON.stringify(resp));
+            
+            LevelMajor.GetUserLevelMajorById(userId).then(function (levelmajor_result) {
+                
+                if (Helper.isValueNullOrUndefine(levelmajor_result)) {
+                    var resp = response.FAILED;
+                    resp.msg = 'Teacher is not existed.';
+                    res.send(JSON.stringify(resp));
+                } else {
+                    console.log(levelmajor_result);
+                    result.LevelMajor = levelmajor_result;
+                    var resp = response.SUCCESS;
+                    resp.msg = 'Get teacher successfully.';
+                    resp.data = result;
+                    res.send(JSON.stringify(resp));
+                }
+
+            }).catch(function (levelmajor_error) {
+                var resp = response.EXCEPTION;
+                resp.data = levelmajor_error;
+                res.send(JSON.stringify(resp));
+            });
         }
 
     }).catch(function (error) {
-        var resp = response.FAILED;
+        var resp = response.EXCEPTION;
         resp.data = error;
         res.send(JSON.stringify(resp));
     });
-    
-    
+
+
 });
 
 router.get('/list', function (req, res) {
