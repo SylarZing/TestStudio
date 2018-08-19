@@ -166,8 +166,8 @@ router.get('', function (req, res) {
                     resp.msg = 'Teacher is not existed.';
                     res.send(JSON.stringify(resp));
                 } else {
-                    console.log(levelmajor_result);
                     result.LevelMajor = levelmajor_result;
+                    
                     var resp = response.SUCCESS;
                     resp.msg = 'Get teacher successfully.';
                     resp.data = result;
